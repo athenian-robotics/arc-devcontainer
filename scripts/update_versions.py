@@ -64,7 +64,7 @@ def main():
         f"TOOLCHAIN_VERSION={toolchain_version}",
         # f"TOOLCHAIN_FILE={toolchain_file}",
         f"JDK_TAG={jdk_tag_encoded}",
-        f"JDK_TAG_CLEAN={jdk_tag_clean}"
+        f"JDK_TAG_CLEAN={jdk_ver_clean}"
     ]
 
     with open('.versions', 'w') as f:
