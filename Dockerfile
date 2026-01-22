@@ -1,5 +1,9 @@
 FROM mcr.microsoft.com/devcontainers/base:ubuntu-24.04
 
+LABEL org.opencontainers.image.source="https://github.com/npmanos/wpilib-container"
+LABEL org.opencontainers.image.base.name="mcr.microsoft.com/devcontainers/base:ubuntu-24.04"
+
+
 # Argument for the WPILib Year
 ARG WPILIB_YEAR
 
@@ -12,6 +16,8 @@ ARG TOOLCHAIN_FILE=cortexa9_vfpv3-roborio-academic-2025-x86_64-linux-gnu-Toolcha
 # VS Code Extension
 ARG VSCODE_WPILIB_VERSION
 ARG VSCODE_WPILIB_URL=https://github.com/wpilibsuite/vscode-wpilib/releases/download/v${VSCODE_WPILIB_VERSION}/vscode-wpilib-${VSCODE_WPILIB_VERSION}.vsix
+
+LABEL org.opencontainers.image.version="$VSCODE_WPILIB_VERSION"
 
 # WPILib JDK (Eclipse Temurin 17)
 # Using official Adoptium binaries as the source
