@@ -67,4 +67,3 @@ jobs:
             VSCODE_WPILIB_VERSION=${{ env.VSCODE_WPILIB_VERSION }}
             JDK_TAG=${{ env.JDK_TAG }}
             JDK_TAG_CLEAN=${{ env.JDK_TAG_CLEAN }}
-            JDK_FILE=${{ env.JDK_FILE }}
