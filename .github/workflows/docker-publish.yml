@@ -63,7 +63,6 @@ jobs:
             WPILIB_YEAR=${{ env.WPILIB_YEAR }}
             GCC_VERSION=${{ env.GCC_VERSION }}
             TOOLCHAIN_VERSION=${{ env.TOOLCHAIN_VERSION }}
-            TOOLCHAIN_FILE=${{ env.TOOLCHAIN_FILE }}
             VSCODE_WPILIB_VERSION=${{ env.VSCODE_WPILIB_VERSION }}
             JDK_TAG=${{ env.JDK_TAG }}
             JDK_TAG_CLEAN=${{ env.JDK_TAG_CLEAN }}
