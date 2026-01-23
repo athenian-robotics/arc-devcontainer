@@ -18,17 +18,8 @@
                 }
             },
             "extensions": [
-                "GitHub.vscode-pull-request-github",
                 "vscjava.vscode-java-pack",
-                "drrouman.git-coauthors",
-                "RichardKotze.git-mob",
-                "vscjava.vscode-gradle",
-                "ms-vsliveshare.vsliveshare",
-                "yzhang.markdown-all-in-one",
-                "bierner.markdown-preview-github-styles",
-                "mdickin.markdown-shortcuts",
-                "tomoki1207.pdf",
-                "redhat.vscode-yaml"
+                "ms-vscode.cpptools-extension-pack"
             ]
         }
     },
