@@ -24,7 +24,7 @@ LABEL org.opencontainers.image.version="$VSCODE_WPILIB_VERSION"
 ARG JDK_TAG
 ARG JDK_TAG_CLEAN
 ARG JDK_FILE=OpenJDK17U-jdk_x64_linux_hotspot_${JDK_TAG_CLEAN}.tar.gz
-ARG JDK_URL=https://github.com/adoptium/temurin17-binaries/releases/download/${JDK_TAG}/${JDK_FILE}
+ARG JDK_URL=https://github.com/adoptium/temurin17-binaries/releases/download/jdk-${JDK_TAG}/${JDK_FILE}
 
 ENV DEBIAN_FRONTEND=noninteractive
 
