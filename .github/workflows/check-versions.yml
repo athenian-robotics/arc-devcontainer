@@ -2,8 +2,8 @@ name: Check for WPILib Updates
 
 on:
   schedule:
-    # Run every day at 04:00 UTC
-    - cron: '0 4 * * *'
+    # Run every day at 03:47 UTC
+    - cron: '47 3 * * *'
   workflow_dispatch:
 
 permissions:
