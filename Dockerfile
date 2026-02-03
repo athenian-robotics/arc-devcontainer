@@ -45,7 +45,7 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
         TOOLCHAIN_ARCH="x86_64-linux-gnu"; \
     elif [ "$TARGETARCH" = "arm64" ]; then \
         JDK_ARCH="aarch64"; \
-        TOOLCHAIN_ARCH="aarch64-bookwork-linux-gnu"; \
+        TOOLCHAIN_ARCH="aarch64-bookworm-linux-gnu"; \
     else \
         echo "Unsupported architecture: $TARGETARCH"; exit 1; \
     fi \
