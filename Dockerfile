@@ -52,7 +52,7 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
     && echo "Downloading for architecture: $TARGETARCH" \
     && JDK_FILE="OpenJDK17U-jdk_${JDK_ARCH}_linux_hotspot_${JDK_TAG_CLEAN}.tar.gz" \
     && JDK_URL="https://github.com/adoptium/temurin17-binaries/releases/download/jdk-${JDK_TAG}/${JDK_FILE}" \
-    && TOOLCHAIN_FILE="cortexa9_vfpv3-roborio-academic-${TOOLCHAIN_VERSION%%.*}-${TOOLCHAIN_ARCH}-Toolchain-${GCC_VERSION}.tgz" \
+    && TOOLCHAIN_FILE="cortexa9_vfpv3-roborio-academic-${TOOLCHAIN_VERSION%%-*}-${TOOLCHAIN_ARCH}-Toolchain-${GCC_VERSION}.tgz" \
     && TOOLCHAIN_URL="https://github.com/wpilibsuite/opensdk/releases/download/${TOOLCHAIN_VERSION}/${TOOLCHAIN_FILE}" \
     # Install JDK
     && wget -q "${JDK_URL}" -O /tmp/jdk.tar.gz \
