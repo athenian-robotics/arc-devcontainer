@@ -2,7 +2,7 @@ name: Build and Publish Dev Container
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "main" ]
     paths:
       - 'Dockerfile'
       - '.versions'
