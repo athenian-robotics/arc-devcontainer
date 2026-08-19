@@ -6,6 +6,12 @@ def get_content(url):
     with urllib.request.urlopen(url) as response:
         return response.read().decode('utf-8')
 
+def parse_groovy_ext_properties(content: str) -> dict[str, str]:
+    pattern = r"ext\.([a-zA-Z]+)\s*=\s*['\"]([^'\"]+)['\"]"
+    matches = re.findall(pattern, content)
+    
+    return dict(matches)
+
 def main():
     print("Fetching WPILib version...")
     # 1. Fetch gradle.properties to get the main WPILib version
@@ -20,24 +26,17 @@ def main():
     wpilib_version = wpilib_version_match.group(1)
     print(f"Detected WPILib Version: {wpilib_version}")
 
-    # 2. Fetch versions.gradle using the tag
+    # 2. Fetch `versions.gradle` using the tag
     print(f"Fetching versions.gradle for tag v{wpilib_version}...")
     versions_url = f'https://raw.githubusercontent.com/wpilibsuite/WPILibInstaller-Avalonia/refs/tags/v{wpilib_version}/scripts/versions.gradle'
     versions_content = get_content(versions_url)
-
-    # Helper regex for Groovy properties: ext.name = 'value' or "value"
-    def find_groovy_var(var_name, content):
-        pattern = f"ext\.{var_name}\s*=\s*['\"]([^'\"]+)['\"]"
-        match = re.search(pattern, content)
-        if not match:
-            raise ValueError(f"Could not find ext.{var_name} in versions.gradle")
-        return match.group(1)
+    versions = parse_groovy_ext_properties(versions_content)
 
     # 3. Parse required variables
-    gcc_version = find_groovy_var('gccVersion', versions_content)
-    toolchain_version = find_groovy_var('toolchainGitTag', versions_content)
-    jdk_tag_raw = find_groovy_var('jdkVersion', versions_content) # e.g., jdk-17.0.12+7
-    wpilib_year = find_groovy_var('frcYear', versions_content)
+    gcc_version = versions.get('gccVersion')
+    toolchain_version = versions.get('toolchainGitTag')
+    jdk_tag_raw = versions.get('jdkVersion') # e.g., jdk-17.0.12+7
+    wpilib_year = versions.get('frcYear') or versions.get('wpilibYear')
 
     # 4. Process variables for Dockerfile compatibility
 
@@ -70,7 +69,7 @@ def main():
     with open('.versions', 'w') as f:
         f.write('\n'.join(output_lines) + '\n')
     
-    print("Successfully updated .versions file:")
+    print("Successfully updated .versions file:\n")
     print('\n'.join(output_lines))
 
 if __name__ == "__main__":
