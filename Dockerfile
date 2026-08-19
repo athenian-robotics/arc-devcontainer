@@ -56,12 +56,12 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
     && TOOLCHAIN_FILE="cortexa9_vfpv3-roborio-academic-${TOOLCHAIN_YEAR}-${TOOLCHAIN_ARCH}-Toolchain-${GCC_VERSION}.tgz" \
     && TOOLCHAIN_URL="https://github.com/wpilibsuite/opensdk/releases/download/${TOOLCHAIN_VERSION}/${TOOLCHAIN_FILE}" \
     # Install JDK
-    && wget -q "${JDK_URL}" -O /tmp/jdk.tar.gz \
+    && wget "${JDK_URL}" -O /tmp/jdk.tar.gz \
     && tar -xzf /tmp/jdk.tar.gz -C /home/vscode/wpilib/${WPILIB_YEAR}/jdk --strip-components=1 \
     && rm /tmp/jdk.tar.gz \
     # Install Toolchain
     && cd /tmp \
-    && wget -q "${TOOLCHAIN_URL}" \
+    && wget "${TOOLCHAIN_URL}" \
     && tar -xzf "${TOOLCHAIN_FILE}" -C /home/vscode/wpilib/${WPILIB_YEAR}/roborio \
     && rm "${TOOLCHAIN_FILE}"
 
