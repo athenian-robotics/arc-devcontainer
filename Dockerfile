@@ -50,20 +50,12 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
         echo "Unsupported architecture: $TARGETARCH"; exit 1; \
     fi \
     && echo "Downloading for architecture: $TARGETARCH" \
-    && JDK_FILE="OpenJDK17U-jdk_${JDK_ARCH}_linux_hotspot_${JDK_TAG_CLEAN}.tar.gz" \
-    && JDK_URL="https://github.com/adoptium/temurin17-binaries/releases/download/jdk-${JDK_TAG}/${JDK_FILE}" \
-    && TOOLCHAIN_YEAR=$(echo ${TOOLCHAIN_VERSION} | cut -c 2-5) \
-    && TOOLCHAIN_FILE="cortexa9_vfpv3-roborio-academic-${TOOLCHAIN_YEAR}-${TOOLCHAIN_ARCH}-Toolchain-${GCC_VERSION}.tgz" \
-    && TOOLCHAIN_URL="https://github.com/wpilibsuite/opensdk/releases/download/${TOOLCHAIN_VERSION}/${TOOLCHAIN_FILE}" \
+    && JDK_URL="https://api.adoptium.net/v3/binary/version/jdk-$JDK_TAG/linux/$JDK_ARCH/jdk/hotspot/normal/eclipse" \
     # Install JDK
-    && wget "${JDK_URL}" -O /tmp/jdk.tar.gz \
+    && wget -nv "${JDK_URL}" -O /tmp/jdk.tar.gz \
     && tar -xzf /tmp/jdk.tar.gz -C /home/vscode/wpilib/${WPILIB_YEAR}/jdk --strip-components=1 \
-    && rm /tmp/jdk.tar.gz \
+    && rm /tmp/jdk.tar.gz
     # Install Toolchain
-    && cd /tmp \
-    && wget "${TOOLCHAIN_URL}" \
-    && tar -xzf "${TOOLCHAIN_FILE}" -C /home/vscode/wpilib/${WPILIB_YEAR}/roborio \
-    && rm "${TOOLCHAIN_FILE}"
 
 # Install VS Code Extension
 RUN wget -q ${VSCODE_WPILIB_URL} -O /home/vscode/wpilib/vscode-wpilib.vsix
