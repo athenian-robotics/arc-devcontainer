@@ -1,17 +1,17 @@
 FROM mcr.microsoft.com/devcontainers/base:ubuntu-24.04
 
-LABEL org.opencontainers.image.source="https://github.com/npmanos/wpilib-container"
-LABEL org.opencontainers.image.base.name="mcr.microsoft.com/devcontainers/base:ubuntu-24.04"
-
 ARG TARGETARCH
 ARG WPILIB_YEAR
-ARG GCC_VERSION
-ARG TOOLCHAIN_VERSION
 ARG VSCODE_WPILIB_VERSION
-ARG VSCODE_WPILIB_URL=https://github.com/wpilibsuite/vscode-wpilib/releases/download/v${VSCODE_WPILIB_VERSION}/vscode-wpilib-${VSCODE_WPILIB_VERSION}.vsix
 ARG JDK_TAG
-ARG JDK_TAG_CLEAN
 
+ARG VSCODE_WPILIB_URL=https://github.com/wpilibsuite/vscode-wpilib/releases/download/v${VSCODE_WPILIB_VERSION}/vscode-wpilib-${VSCODE_WPILIB_VERSION}.vsix
+ARG JAVA_LSP_ARM_URL
+ARG JAVA_LSP_X64_URL
+
+
+LABEL org.opencontainers.image.source="https://github.com/athenian-robotics/arc-devcontainer"
+LABEL org.opencontainers.image.base.name="mcr.microsoft.com/devcontainers/base:ubuntu-24.04"
 LABEL org.opencontainers.image.version="$VSCODE_WPILIB_VERSION"
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -55,13 +55,17 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
     && wget -nv "${JDK_URL}" -O /tmp/jdk.tar.gz \
     && tar -xzf /tmp/jdk.tar.gz -C /home/vscode/wpilib/${WPILIB_YEAR}/jdk --strip-components=1 \
     && rm /tmp/jdk.tar.gz
-    # Install Toolchain
 
 # Install VS Code Extension
-RUN wget -q ${VSCODE_WPILIB_URL} -O /home/vscode/wpilib/vscode-wpilib.vsix
+RUN wget -nv ${VSCODE_WPILIB_URL} -O /home/vscode/extension-artifacts/vscode-wpilib.vsix
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+        wget -nv "$JAVA_LSP_ARM_URL" -O /home/vscode/extension-artifacts/redhat-java.vsix; \
+    elif [ "$TARGETARCH" = "amd64" ]; then \
+        wget -nv "$JAVA_LSP_X64_URL" -O /home/vscode/extension-artifacts/redhat-java.vsix; \
+    fi
 
 # Fix permissions
-RUN sudo chown -R vscode:vscode /home/vscode/wpilib
+RUN sudo chown -R vscode:vscode /home/vscode/wpilib /home/vscode/extension-artifacts
 
 # Environment Setup
 ENV JAVA_HOME=/home/vscode/wpilib/${WPILIB_YEAR}/jdk

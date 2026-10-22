@@ -1,4 +1,5 @@
 import urllib.request
+import json
 import re
 import os
 
@@ -12,14 +13,23 @@ def parse_groovy_ext_properties(content: str) -> dict[str, str]:
     
     return dict(matches)
 
+# Fetch latest version of redhat.java LSP extension
+# We install this here rather than in the .devcontainer.json so we can get the platform-specific extension
+#   version, rather than the 'universal' version. This lets us use a bundled JRE and pin the extension version.
+def redhat_java_vsix(arch: str) -> str:
+    url = "https://open-vsx.org/api/redhat/java"
+    metadata_str = get_content(url)
+    metadata = json.loads(metadata_str)
+
+    return metadata['downloads'][arch]
+    
+
 def main():
     print("Fetching WPILib version...")
     # 1. Fetch gradle.properties to get the main WPILib version
     props_url = 'https://raw.githubusercontent.com/wpilibsuite/WPILibInstaller-Avalonia/refs/heads/main/gradle.properties'
     props_content = get_content(props_url)
     
-    # Parse gradleRioVersion: 2026.2.1 (Handles : or = separators)
-    # This maps to VSCODE_WPILIB_VERSION in the Dockerfile
     wpilib_version_match = re.search(r'gradleRioVersion\s*[:=]\s*([^\s]+)', props_content)
     if not wpilib_version_match:
         raise ValueError("Could not find gradleRioVersion in gradle.properties")
@@ -33,9 +43,7 @@ def main():
     versions = parse_groovy_ext_properties(versions_content)
 
     # 3. Parse required variables
-    gcc_version = versions.get('gccVersion')
-    toolchain_version = versions.get('toolchainGitTag')
-    jdk_tag_raw = versions.get('jdkVersion') # e.g., jdk-17.0.12+7
+    jdk_tag_raw = versions.get('jdkVersion')
     wpilib_year = versions.get('frcYear') or versions.get('wpilibYear')
 
     # 4. Process variables for Dockerfile compatibility
@@ -44,26 +52,19 @@ def main():
     # e.g., jdk-17.0.12+7 -> jdk-17.0.12%2B7
     jdk_tag_encoded = jdk_tag_raw.replace('+', '%2B')
 
-    # JDK FILE: Construct the tar.gz filename
-    # Pattern: jdk-17.0.12+7 -> OpenJDK17U-jdk_x64_linux_hotspot_17.0.12_7.tar.gz
-    # Remove 'jdk-' prefix and replace '+' with '_'
-    jdk_ver_clean = jdk_tag_raw.replace('jdk-', '').replace('+', '_')
-    # jdk_file = f"OpenJDK17U-jdk_x64_linux_hotspot_{jdk_ver_clean}.tar.gz"
+    # 5. Fetch download URL for extension redhat.java
+    redhat_java_x64 = redhat_java_vsix('linux-x64')
+    redhat_java_arm = redhat_java_vsix('linux-arm64')
 
-    # TOOLCHAIN FILE: Construct the filename
-    # Pattern: cortexa9_vfpv3-roborio-academic-{YEAR}-x86_64-linux-gnu-Toolchain-{GCC}.tgz
-    # toolchain_file = f"cortexa9_vfpv3-roborio-academic-{wpilib_year}-x86_64-linux-gnu-Toolchain-{gcc_version}.tgz"
 
-    # 5. Write to .versions file
+    # 6. Write to .versions file
     output_lines = [
         f"VSCODE_WPILIB_VERSION={wpilib_version}",
         f"WPILIB_VERSION={wpilib_version}",
         f"WPILIB_YEAR={wpilib_year}",
-        f"GCC_VERSION={gcc_version}",
-        f"TOOLCHAIN_VERSION={toolchain_version}",
-        # f"TOOLCHAIN_FILE={toolchain_file}",
         f"JDK_TAG={jdk_tag_encoded}",
-        f"JDK_TAG_CLEAN={jdk_ver_clean}"
+        f"JAVA_LSP_ARM_URL={redhat_java_arm}",
+        f"JAVA_LSP_X64_URL={redhat_java_x64}"        
     ]
 
     with open('.versions', 'w') as f:
