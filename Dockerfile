@@ -58,7 +58,7 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
 
 # Install VS Code Extension
 RUN wget -nv ${VSCODE_WPILIB_URL} -O /home/vscode/extension-artifacts/vscode-wpilib.vsix
-RUN wget -nv ${JAVA_LSP_URL} -O /home/vscode/extension-artifacts/redhat-java.vsix; \
+RUN wget -nv ${JAVA_LSP_URL} -O /home/vscode/extension-artifacts/redhat-java.vsix;
     
 # Fix permissions
 RUN sudo chown -R vscode:vscode /home/vscode/wpilib /home/vscode/extension-artifacts
