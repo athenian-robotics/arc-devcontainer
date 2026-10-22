@@ -2,6 +2,7 @@ FROM mcr.microsoft.com/devcontainers/base:ubuntu-24.04
 
 ARG TARGETARCH
 ARG WPILIB_YEAR
+ARG WPILIB_VERSION
 ARG JDK_TAG
 
 ARG VSCODE_WPILIB_URL=https://github.com/wpilibsuite/vscode-wpilib/releases/download/v${WPILIB_VERSION}/vscode-wpilib-${WPILIB_VERSION}.vsix
