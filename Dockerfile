@@ -37,7 +37,8 @@ WORKDIR /home/vscode
 RUN mkdir -p /home/vscode/wpilib/${WPILIB_YEAR}/roborio \
     && mkdir -p /home/vscode/wpilib/${WPILIB_YEAR}/tools \
     && mkdir -p /home/vscode/wpilib/${WPILIB_YEAR}/maven \
-    && mkdir -p /home/vscode/wpilib/${WPILIB_YEAR}/jdk
+    && mkdir -p /home/vscode/wpilib/${WPILIB_YEAR}/jdk \
+    && mkdir -p /home/vscode/extension-artifacts
 
 # Install WPILib JDK and Toolchain based on architecture
 RUN if [ "$TARGETARCH" = "amd64" ]; then \
