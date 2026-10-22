@@ -76,11 +76,9 @@ jobs:
           build-args: |
             TARGETARCH=${{ matrix.platform == 'linux/amd64' && 'amd64' || 'arm64' }}
             WPILIB_YEAR=${{ env.WPILIB_YEAR }}
-            GCC_VERSION=${{ env.GCC_VERSION }}
-            TOOLCHAIN_VERSION=${{ env.TOOLCHAIN_VERSION }}
-            VSCODE_WPILIB_VERSION=${{ env.VSCODE_WPILIB_VERSION }}
+            WPILIB_VERSION=${{ env.WPILIB_VERSION }}
             JDK_TAG=${{ env.JDK_TAG }}
-            JDK_TAG_CLEAN=${{ env.JDK_TAG_CLEAN }}
+            JAVA_LSP_URL=${{ matrix.platform == 'linux/amd64' && env.JAVA_LSP_X64_URL || env.JAVA_LSP_ARM_URL }}
 
       - name: Export digest
         run: |

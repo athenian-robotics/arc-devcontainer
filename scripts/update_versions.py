@@ -59,7 +59,6 @@ def main():
 
     # 6. Write to .versions file
     output_lines = [
-        f"VSCODE_WPILIB_VERSION={wpilib_version}",
         f"WPILIB_VERSION={wpilib_version}",
         f"WPILIB_YEAR={wpilib_year}",
         f"JDK_TAG={jdk_tag_encoded}",
