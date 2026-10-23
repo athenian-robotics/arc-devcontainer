@@ -137,5 +137,4 @@ jobs:
           
           docker buildx imagetools create -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
             -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$WPILIB_YEAR \
-            -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$VSCODE_WPILIB_VERSION \
             $DIGEST_ARGS
