@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Get versions from `./versions`
         id: get-versions
-        run: echo "versions=$(printf [%s] $(ls versions | paste -sd ','))" >> "$GITHUB_OUTPUT"
+        run: echo "versions=$(ls versions | jq -Rsc 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
   build:
     name: Build ${{ matrix.platform }}
     runs-on: ${{ matrix.runner }}
@@ -31,7 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: ${{ needs.get-versions.outputs.versions}} # In the form of e.x. `[2026.2.1, 2027.0.0]`
+        version: ${{ fromJSON(needs.get-versions.outputs.versions) }} # In the form of e.x. `[2026.2.1, 2027.0.0]`
         platform: [linux/amd64, linux/arm64]
         include:
           - platform: linux/amd64
