@@ -56,9 +56,14 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
     && tar -xzf /tmp/jdk.tar.gz -C /home/vscode/wpilib/${WPILIB_YEAR}/jdk --strip-components=1 \
     && rm /tmp/jdk.tar.gz
 
-# Install VS Code Extension
+# Download extension artifacts
 RUN wget -nv ${VSCODE_WPILIB_URL} -O /home/vscode/extension-artifacts/vscode-wpilib.vsix
-RUN wget -nv 'https://open-vsx.org/api/redhat/java/latest' -O /home/vscode/extension-artifacts/redhat-java.vsix;
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
+        wget -nv "https://open-vsx.org/api/redhat/java/linux-x64/latest/file/download" -O /home/vscode/extension-artifacts/redhat-java.vsix
+    elif [ "$TARGETARCH" = "arm64" ]; then \
+        wget -nv "https://open-vsx.org/api/redhat/java/linux-arm64/latest/file/download" -O /home/vscode/extension-artifacts/redhat-java.vsix
+
+    fi
     
 # Fix permissions
 RUN sudo chown -R vscode:vscode /home/vscode/wpilib /home/vscode/extension-artifacts
