@@ -21,7 +21,7 @@ jobs:
     steps:
       - name: Get versions from `./versions`
         id: get-versions
-        run: echo "versions=$(printf [%s] $(ls versions | paste -sd ',')")" >> "$GITHUB_OUTPUT"
+        run: echo "versions=$(printf [%s] $(ls versions | paste -sd ','))" >> "$GITHUB_OUTPUT"
   build:
     name: Build ${{ matrix.platform }}
     runs-on: ${{ matrix.runner }}
