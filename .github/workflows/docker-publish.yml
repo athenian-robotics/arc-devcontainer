@@ -19,6 +19,8 @@ jobs:
     outputs:
       versions: ${{ steps.get-versions.outputs.versions }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Get versions from `./versions`
         id: get-versions
         run: echo "versions=$(printf [%s] $(ls versions | paste -sd ','))" >> "$GITHUB_OUTPUT"
