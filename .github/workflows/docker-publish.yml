@@ -29,7 +29,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: ${{ needs.get-version.outputs.versions}} # In the form of e.x. `[2026.2.1, 2027.0.0]`
+        version: ${{ needs.get-versions.outputs.versions}} # In the form of e.x. `[2026.2.1, 2027.0.0]`
         platform: [linux/amd64, linux/arm64]
         include:
           - platform: linux/amd64
