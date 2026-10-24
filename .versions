@@ -1,5 +1,0 @@
-WPILIB_VERSION=2027.0.0-alpha-7
-WPILIB_YEAR=2027_alpha7
-JDK_TAG=25.0.4.1%2B1
-JAVA_LSP_ARM_URL=https://open-vsx.org/api/redhat/java/linux-arm64/1.59.2026102108/file/redhat.java-1.59.2026102108@linux-arm64.vsix
-JAVA_LSP_X64_URL=https://open-vsx.org/api/redhat/java/linux-x64/1.59.2026102108/file/redhat.java-1.59.2026102108@linux-x64.vsix

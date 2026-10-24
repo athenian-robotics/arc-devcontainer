@@ -14,12 +14,23 @@ env:
   IMAGE_NAME: athenian-robotics/arc-devcontainer
 
 jobs:
+  get-versions:
+    runs-on: ubuntu-latest
+    outputs:
+      versions: ${{ steps.get-versions.outputs.versions }}
+    steps:
+      - name: Get versions from `./versions`
+        id: get-versions
+        run: echo "versions=$(printf [%s] $(ls versions | paste -sd ',')")" >> "$GITHUB_OUTPUT"
   build:
     name: Build ${{ matrix.platform }}
     runs-on: ${{ matrix.runner }}
+    needs: get-versions
     strategy:
       fail-fast: false
       matrix:
+        version: ${{ needs.get-version.outputs.versions}} # In the form of e.x. `[2026.2.1, 2027.0.0]`
+        platform: [linux/amd64, linux/arm64]
         include:
           - platform: linux/amd64
             runner: ubuntu-latest
@@ -38,13 +49,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Load Version Config
-        run: |
-          if [ -f .versions ]; then
-            cat .versions >> $GITHUB_ENV
-          else
-            echo "Error: .versions file not found!"
-            exit 1
-          fi
+        run: cat 'versions/${{matrix.version}}' >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -72,14 +77,11 @@ jobs:
           outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
           cache-from: type=gha,scope=${{ matrix.platform }}
           cache-to: type=gha,mode=max,scope=${{ matrix.platform }}
-          # We pass the platform as TARGETARCH so the Dockerfile logic works
           build-args: |
             TARGETARCH=${{ matrix.platform == 'linux/amd64' && 'amd64' || 'arm64' }}
             WPILIB_YEAR=${{ env.WPILIB_YEAR }}
             WPILIB_VERSION=${{ env.WPILIB_VERSION }}
             JDK_TAG=${{ env.JDK_TAG }}
-            JAVA_LSP_URL=${{ matrix.platform == 'linux/amd64' && env.JAVA_LSP_X64_URL || env.JAVA_LSP_ARM_URL }}
-
       - name: Export digest
         run: |
           mkdir -p /tmp/digests
