@@ -51,17 +51,21 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
     fi \
     && echo "Downloading for architecture: $TARGETARCH" \
     && JDK_URL="https://api.adoptium.net/v3/binary/version/jdk-$JDK_TAG/linux/$JDK_ARCH/jdk/hotspot/normal/eclipse" \
-    # Install JDK
     && wget -nv "${JDK_URL}" -O /tmp/jdk.tar.gz \
     && tar -xzf /tmp/jdk.tar.gz -C /home/vscode/wpilib/${WPILIB_YEAR}/jdk --strip-components=1 \
     && rm /tmp/jdk.tar.gz
 
 # Download extension artifacts
 RUN wget -nv ${VSCODE_WPILIB_URL} -O /home/vscode/extension-artifacts/vscode-wpilib.vsix
-RUN if [ "$TARGETARCH" = "amd64" ]; then \
-        wget -nv "https://open-vsx.org/api/redhat/java/linux-x64/latest/file/download" -O /home/vscode/extension-artifacts/redhat-java.vsix \
+RUN set -eu; \
+    if [ "$TARGETARCH" = "amd64" ]; then \
+        wget -nv "https://open-vsx.org/api/redhat/java/linux-x64/latest/file/download" \
+            -O /home/vscode/extension-artifacts/redhat-java.vsix; \
     elif [ "$TARGETARCH" = "arm64" ]; then \
-        wget -nv "https://open-vsx.org/api/redhat/java/linux-arm64/latest/file/download" -O /home/vscode/extension-artifacts/redhat-java.vsix \
+        wget -nv "https://open-vsx.org/api/redhat/java/linux-arm64/latest/file/download" \
+            -O /home/vscode/extension-artifacts/redhat-java.vsix; \
+    else \
+        echo "Unsupported architecture: $TARGETARCH"; exit 1; \
     fi
     
 # Fix permissions
