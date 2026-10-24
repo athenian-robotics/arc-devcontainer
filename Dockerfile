@@ -59,10 +59,9 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
 # Download extension artifacts
 RUN wget -nv ${VSCODE_WPILIB_URL} -O /home/vscode/extension-artifacts/vscode-wpilib.vsix
 RUN if [ "$TARGETARCH" = "amd64" ]; then \
-        wget -nv "https://open-vsx.org/api/redhat/java/linux-x64/latest/file/download" -O /home/vscode/extension-artifacts/redhat-java.vsix
+        wget -nv "https://open-vsx.org/api/redhat/java/linux-x64/latest/file/download" -O /home/vscode/extension-artifacts/redhat-java.vsix \
     elif [ "$TARGETARCH" = "arm64" ]; then \
-        wget -nv "https://open-vsx.org/api/redhat/java/linux-arm64/latest/file/download" -O /home/vscode/extension-artifacts/redhat-java.vsix
-
+        wget -nv "https://open-vsx.org/api/redhat/java/linux-arm64/latest/file/download" -O /home/vscode/extension-artifacts/redhat-java.vsix \
     fi
     
 # Fix permissions
