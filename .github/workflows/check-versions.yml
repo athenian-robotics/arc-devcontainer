@@ -40,5 +40,5 @@ jobs:
           NEW_VERSION=$(grep "WPILIB_VERSION=" .versions | cut -d= -f2)
           
           git add .versions
-          git commit -m "chore: bump WPILib version to $NEW_VERSION"
+          git commit -m "chore: add WPILib $NEW_VERSION"
           git push

@@ -17,13 +17,43 @@ jobs:
   get-versions:
     runs-on: ubuntu-latest
     outputs:
-      versions: ${{ steps.get-versions.outputs.versions }}
+      versions: ${{ steps.determine-versions.outputs.versions }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Get versions from `./versions`
-        id: get-versions
-        run: echo "versions=$(ls versions | jq -Rsc 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
+      - name: Find changes
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          list-files: json
+          filters: |
+            version:
+              - 'versions/**'
+            build:
+              - 'Dockerfile'
+              - '.github/workflows/docker-publish.yml'
+
+      - name: Determine versions to build
+        id: determine-versions
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BUILD_ALL: ${{ steps.changes.outputs.build == 'true' }}
+          CHANGED_FILES: ${{ steps.changes.outputs.versions_files }}
+        run: |
+          if [[ "$EVENT_NAME" == "workflow_dispatch" || "$BUILD_ALL" == 'true' ]]; then
+            # Rebuild for every WPILib version
+            
+            # Get every version and convert to json
+            VERSIONS_JSON=$(ls versions | jq -Rsc 'split("\n")[:-1]')
+          else
+            # Rebuild for new/modified WPILib version
+
+            # Get modified version files, and extract basename from relative path
+            VERSIONS_JSON=$(echo "$CHANGED_FILES" | jq -c 'map(split("/")[-1])')
+          fi
+
+          echo "versions=$VERSIONS_JSON" >> "$GITHUB_OUTPUT"    
+          
   build:
     name: Build v${{ matrix.version }} for ${{ matrix.platform }}
     runs-on: ${{ matrix.runner }}
