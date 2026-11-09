@@ -57,10 +57,10 @@ def main():
         f"JDK_TAG={jdk_tag_encoded}",      
     ]
 
-    with open(version_file, 'w') as f:
+    with open('versions/' + wpilib_version, 'w') as f:
         f.write('\n'.join(output_lines) + '\n')
     
-    print("Successfully wrote new version to " + str(version_file) + " with contents:")
+    print("Successfully wrote new version " + wpilib_version + " with contents:")
     print('\n'.join(output_lines))
 
 if __name__ == "__main__":
