@@ -39,6 +39,6 @@ jobs:
           # Read new version for commit message
           NEW_VERSION=$(git diff --name-only)
           
-          git add .versions
+          git add versions/${NEW_VERSION}
           git commit -m "chore: add WPILib $NEW_VERSION"
           git push
