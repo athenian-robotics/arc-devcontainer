@@ -25,20 +25,16 @@ jobs:
       - name: Run Version Update Script
         run: python scripts/update_versions.py
 
-      - name: Check for changes
-        id: git-check
-        run: |
-          git diff --exit-code ./versions/ || echo "changes=true" >> $GITHUB_OUTPUT
-
       - name: Commit and Push Changes
-        if: steps.git-check.outputs.changes == 'true'
         run: |
+          if [[ -z "$(git status --porcelain -- versions/)" ]]; then
+            echo "No version changes."
+            exit 0
+          fi
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # Read new version for commit message
-          NEW_VERSION=$(git diff --name-only)
-          
-          git add versions/${NEW_VERSION}
-          git commit -m "chore: add WPILib $NEW_VERSION"
+
+          git add -- versions/
+          git commit -m "chore: update WPILib version metadata"
           git push
